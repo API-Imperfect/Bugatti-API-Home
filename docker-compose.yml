@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+   bugatti:
+      build:
+         context: .
+         dockerfile: Dockerfile
+      container_name: Bugatti-API
+      command: python3 manage.py runserver 0.0.0.0:8000
+      # volumes here mounts the code to the container and updates
+      # the container when a change to the source code is made.
+      # without this you would have to rebuild the image each time
+      #changes are made to source code
+      volumes:
+         - .:/app
+      ports:
+         - "8000:8000"
+      env_file:
+         - .env
+      restart: "on-failure"
+      depends_on:
+         - postgres-db
+
+   postgres-db:
+      image: postgres:12-alpine
+      volumes:
+         - postgres_data:/var/lib/postgresql/data/
+      environment:
+         - POSTGRES_USER=${POSTGRES_USER}
+         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+         - POSTGRES_DB=${POSTGRES_DB}
+      restart: "on-failure"
+      healthcheck:
+         test:
+            [
+               "CMD",
+               "pg_isready",
+               "-q",
+               "-d",
+               "${POSTGRES_DB}",
+               "-U",
+               "${POSTGRES_USER}",
+            ]
+         timeout: 45s
+         interval: 10s
+         retries: 10
+
+volumes:
+   postgres_data:

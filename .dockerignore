@@ -1,0 +1,9 @@
+Dockerfile
+env
+logs/
+.git
+.cache
+.md
+Dockerfile.prod
+Dockerfile
+.dockerignore
