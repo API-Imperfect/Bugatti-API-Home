@@ -15,7 +15,7 @@ class UserAdmin(BaseUserAdmin):
     list_filter=["email","name","is_staff","is_active"]
     fieldsets=(
         (_("Login Credentials"),{"fields":("email","password",)}),
-        (_("Personal Information"),{"fields":("name",)}),
+        (_("Personal Information"),{"fields":("name","phone_number","gender","country","net_worth",)}),
         (_("Permissions and Groups"),{"fields":("is_active","is_staff","is_superuser","groups", "user_permissions",)}),
         (_("Important dates"),{"fields":("last_login","date_joined",)}),
     )

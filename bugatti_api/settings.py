@@ -46,9 +46,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'rest_framework',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    'django_countries',
     'users.apps.UsersConfig'
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -134,3 +142,41 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 AUTH_USER_MODEL='users.CustomUser'
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+
+SITE_ID=1
+if DEBUG:
+    EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION='none'
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'users.serializers.CustomUserRegistrationSerializer',
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    ),
+}
+
+REST_USE_JWT=True #enable JWT authentication
+JWT_AUTH_COOKIE='jid' #name of your cookie key
+# JWT_AUTH_SECURE - If you want the cookie to be only sent to the server when a request is made with the https scheme(default: False).
+
+REST_AUTH_SERIALIZERS={
+    'USER_DETAILS_SERIALIZER': 'users.serializers.CustomUserDetailsSerializer'
+}
